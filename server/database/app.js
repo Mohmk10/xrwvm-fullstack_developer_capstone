@@ -63,12 +63,29 @@ app.get('/fetchDealers', async (req, res) => {
 
 // Express route to fetch Dealers by a particular state
 app.get('/fetchDealers/:state', async (req, res) => {
-//Write your code here
+  try {
+    const state = req.params.state; // Récupère l'état depuis les paramètres de l'URL
+    const dealers = await Dealerships.find({ state: state }); // Recherche les concessionnaires avec cet état
+    res.json(dealers); // Renvoie les résultats au format JSON
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching dealers by state' });
+  }
 });
 
-// Express route to fetch dealer by a particular id
 app.get('/fetchDealer/:id', async (req, res) => {
-//Write your code here
+try {
+const dealerId = parseInt(req.params.id); // Assure-toi que l'ID est un nombre
+const dealer = await Dealerships.findOne({ id: dealerId });
+if (dealer) {
+res.json(dealer);
+} else {
+res.status(404).json({ error: 'Dealer not found' });
+}
+} catch (error) {
+console.error(error);
+res.status(500).json({ error: 'Error fetching dealer' });
+}
 });
 
 //Express route to insert review
